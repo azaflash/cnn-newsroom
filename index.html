@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CNN Newsroom</title>
+    <style>
+      :root{--bg:#0f172a;--panel:#111827;--card:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--accent:#ef4444}
+      *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(180deg,#020817,#0f172a);color:var(--text)}
+      .container{max-width:1200px;margin:auto;padding:24px}header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0 28px;border-bottom:1px solid #334155}
+      .brand{font-size:2rem;font-weight:900}.brand span{color:var(--accent)}.nav{display:flex;gap:16px;color:var(--muted);font-size:.95rem}
+      .hero{display:grid;grid-template-columns:1.4fr .8fr;gap:24px;padding:28px 0 24px}.featured{background:linear-gradient(135deg,#111827,#1f2937);border-radius:18px;overflow:hidden;box-shadow:0 18px 40px #0004}
+      .featured img{width:100%;height:380px;object-fit:cover;display:block}.featured-content{padding:20px 22px 26px}.badge{display:inline-block;background:#ef444426;color:#fca5a5;border:1px solid #ef444440;border-radius:999px;padding:6px 10px;font-size:.75rem;font-weight:700;text-transform:uppercase}
+      h1,h2,h3,p{margin:0}.featured h1{font-size:clamp(2rem,2vw,2.8rem);line-height:1.08;margin-top:14px}.featured p{margin-top:14px;color:var(--muted);line-height:1.6}
+      .side-panel{display:flex;flex-direction:column;gap:18px}.mini-card{background:#1f2937e6;padding:18px;border-radius:16px;border:1px solid #94a3b81f}.mini-card h3{font-size:1.1rem;line-height:1.4}.meta{margin-top:8px;color:var(--muted);font-size:.8rem}
+      .section-title{margin:30px 0 18px;font-size:1.4rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}.article-card{background:#111827eb;border-radius:18px;overflow:hidden;border:1px solid #94a3b81f;transition:transform .2s,box-shadow .2s}.article-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px #0006}
+      .article-card img{width:100%;height:200px;object-fit:cover;display:block}.article-body{padding:18px}.article-body h3{font-size:1.2rem;line-height:1.35}.article-body p{margin-top:10px;color:var(--muted);line-height:1.6;font-size:.95rem}.meta-row{margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:.8rem}.article-link{display:inline-block;margin-top:12px;color:#fca5a5;text-decoration:none;font-weight:700}.loading{color:var(--muted);padding:30px 0}
+      @media(max-width:760px){.hero{grid-template-columns:1fr}header{flex-direction:column;align-items:flex-start}.nav{flex-wrap:wrap}}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header><div class="brand"><span>CNN</span> Newsroom</div><nav class="nav"><span>World</span><span>Politics</span><span>Business</span><span>Health</span><span>Tech</span></nav></header>
+      <section class="hero"><article id="featured" class="featured"><div class="loading">Loading top story...</div></article><aside id="sidebar" class="side-panel"></aside></section>
+      <h2 class="section-title">Latest headlines</h2><section id="articles" class="grid"></section>
+    </div>
+    <script>
+      const RSS_URL="https://api.rss2json.com/v1/api.json?rss_url=https://rss.cnn.com/rss/cnn_topstories.rss";
+      async function fetchNews(){try{const res=await fetch(RSS_URL),data=await res.json();if(!data.items||data.status!=="ok")throw Error("Unable to load CNN feed");renderNews(data.items.filter(item=>item.link));}catch(error){document.getElementById("articles").innerHTML="<p class='loading'>Could not load CNN headlines right now.</p>";console.error(error)}}
+      function renderNews(articles){const featured=document.getElementById("featured"),sidebar=document.getElementById("sidebar"),container=document.getElementById("articles"),top=articles[0];if(!top)return;featured.innerHTML=`<img src="${top.thumbnail||'https://placehold.co/1200x800/111827/ffffff?text=CNN'}" alt="${top.title}"><div class="featured-content"><span class="badge">Top Story</span><h1>${top.title}</h1><p>${stripHtml(top.description||"Read the latest CNN update.")}</p><div class="meta-row"><span>${new Date(top.pubDate).toLocaleDateString()}</span><a href="${top.link}" target="_blank" class="article-link">Read more →</a></div></div>`;sidebar.innerHTML=articles.slice(1,4).map(a=>`<div class="mini-card"><h3>${a.title}</h3><div class="meta">${new Date(a.pubDate).toLocaleDateString()}</div></div>`).join("");container.innerHTML=articles.slice(1).map(a=>`<article class="article-card"><img src="${a.thumbnail||'https://placehold.co/800x500/1f2937/ffffff?text=CNN'}" alt="${a.title}"><div class="article-body"><h3>${a.title}</h3><p>${stripHtml(a.description||"Read the latest CNN coverage.")}</p><div class="meta-row"><span>${new Date(a.pubDate).toLocaleDateString()}</span><a class="article-link" href="${a.link}" target="_blank">Read →</a></div></div></article>`).join("")}
+      function stripHtml(html){const tmp=document.createElement("div");tmp.innerHTML=html;return tmp.textContent.replace(/\s+/g," ").trim().slice(0,180)+"..."}fetchNews();
+    </script>
+  </body>
+</html>
