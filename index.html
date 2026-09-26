@@ -7,69 +7,221 @@
     <style>
       :root{--bg:#0f172a;--panel:#111827;--card:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--accent:#22c55e}
       *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(180deg,#020817,#0f172a);color:var(--text)}
-      .container{max-width:1200px;margin:auto;padding:24px}header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0 28px;border-bottom:1px solid #334155}
-      .brand{font-size:2rem;font-weight:900}.brand span{color:var(--accent)}.nav{display:flex;gap:16px;color:var(--muted);font-size:.95rem}
-      .hero{display:grid;grid-template-columns:1.4fr .8fr;gap:24px;padding:28px 0 24px}.featured{background:linear-gradient(135deg,#111827,#1f2937);border-radius:18px;overflow:hidden;box-shadow:0 18px 40px #0004}
+      .app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+      .sidebar{background:#111827;border-right:1px solid #334155;padding:20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+      .brand{font-size:1.5rem;font-weight:900;margin-bottom:30px;color:var(--accent)}.brand-full{display:none}.brand-short{display:inline}
+      .nav-section{margin-bottom:24px}.nav-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:700}
+      .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;color:var(--muted);transition:all .2s;text-decoration:none}
+      .nav-item:hover{background:#1f2937;color:var(--text)}.nav-item.active{background:var(--accent);color:#0f172a;font-weight:600}
+      .main{overflow-y:auto}.container{max-width:1200px;margin:0 auto;padding:24px}
+      header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0 28px;border-bottom:1px solid #334155;margin-bottom:24px}
+      .header-brand{font-size:2rem;font-weight:900}.header-brand span{color:var(--accent)}.header-nav{display:flex;gap:16px;color:var(--muted);font-size:.95rem}
+      .search-box{background:#1f2937;border:1px solid #334155;padding:10px 14px;border-radius:8px;color:var(--text);width:100%;max-width:300px}
+      .page{display:none}.page.active{display:block}
+      h1,h2,h3,p{margin:0}.section-title{font-size:1.8rem;font-weight:800;margin-bottom:24px}
+      .hero{display:grid;grid-template-columns:1.4fr .8fr;gap:24px;margin-bottom:40px}.featured{background:linear-gradient(135deg,#111827,#1f2937);border-radius:18px;overflow:hidden;box-shadow:0 18px 40px #0004}
       .featured img{width:100%;height:380px;object-fit:cover;display:block}.featured-content{padding:20px 22px 26px}.badge{display:inline-block;background:#22c55e26;color:#86efac;border:1px solid #22c55e40;border-radius:999px;padding:6px 10px;font-size:.75rem;font-weight:700;text-transform:uppercase}
-      h1,h2,h3,p{margin:0}.featured h1{font-size:clamp(2rem,2vw,2.8rem);line-height:1.08;margin-top:14px}.featured p{margin-top:14px;color:var(--muted);line-height:1.6}
-      .side-panel{display:flex;flex-direction:column;gap:18px}.mini-card{background:#1f2937e6;padding:18px;border-radius:16px;border:1px solid #94a3b81f}.mini-card h3{font-size:1.1rem;line-height:1.4}.meta{margin-top:8px;color:var(--muted);font-size:.8rem}
-      .section-title{margin:30px 0 18px;font-size:1.4rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}.article-card{background:#111827eb;border-radius:18px;overflow:hidden;border:1px solid #94a3b81f;transition:transform .2s,box-shadow .2s}.article-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px #0006}
-      .article-card img{width:100%;height:200px;object-fit:cover;display:block}.article-body{padding:18px}.article-body h3{font-size:1.2rem;line-height:1.35}.article-body p{margin-top:10px;color:var(--muted);line-height:1.6;font-size:.95rem}.meta-row{margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:.8rem}.article-link{display:inline-block;margin-top:12px;color:#86efac;text-decoration:none;font-weight:700}.loading{color:var(--muted);padding:30px 0}
-      @media(max-width:760px){.hero{grid-template-columns:1fr}header{flex-direction:column;align-items:flex-start}.nav{flex-wrap:wrap}}
+      .featured h1{font-size:clamp(2rem,2vw,2.8rem);line-height:1.08;margin-top:14px}.featured p{margin-top:14px;color:var(--muted);line-height:1.6}
+      .side-panel{display:flex;flex-direction:column;gap:18px}.mini-card{background:#1f2937e6;padding:18px;border-radius:16px;border:1px solid #94a3b81f;cursor:pointer;transition:transform .2s}.mini-card:hover{transform:translateY(-2px)}.mini-card h3{font-size:1.1rem;line-height:1.4}.meta{margin-top:8px;color:var(--muted);font-size:.8rem}
+      .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}.article-card{background:#111827eb;border-radius:18px;overflow:hidden;border:1px solid #94a3b81f;transition:transform .2s,box-shadow .2s;cursor:pointer}
+      .article-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px #0006}.article-card img{width:100%;height:200px;object-fit:cover;display:block}.article-body{padding:18px}.article-body h3{font-size:1.2rem;line-height:1.35}.article-body p{margin-top:10px;color:var(--muted);line-height:1.6;font-size:.95rem}.meta-row{margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:.8rem}.article-link{display:inline-block;margin-top:12px;color:#86efac;text-decoration:none;font-weight:700}
+      .article-detail{background:#1f2937;border-radius:18px;padding:40px;margin-bottom:40px}.article-detail img{width:100%;max-height:500px;object-fit:cover;border-radius:12px;margin-bottom:30px}
+      .article-detail h1{font-size:2.5rem;margin-bottom:20px}.article-detail .meta-info{display:flex;gap:20px;color:var(--muted);margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid #334155}
+      .article-detail .content{line-height:1.8;color:var(--text);font-size:1.1rem}.back-btn{display:inline-block;margin-bottom:20px;color:#86efac;text-decoration:none;font-weight:600;cursor:pointer}
+      .loading{color:var(--muted);padding:30px 0;text-align:center}.empty{color:var(--muted);padding:40px;text-align:center}
+      .category-filter{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}.filter-btn{padding:8px 16px;border-radius:8px;border:1px solid #334155;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;font-weight:600}
+      .filter-btn.active{background:var(--accent);color:#0f172a;border-color:var(--accent)}
+      .pagination{display:flex;gap:10px;justify-content:center;margin-top:40px}.page-btn{padding:10px 14px;border-radius:8px;border:1px solid #334155;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+      .page-btn.active{background:var(--accent);color:#0f172a}.page-btn:hover:not(:disabled){background:#22c55e33}
+      @media(max-width:1024px){.app{grid-template-columns:1fr}.sidebar{display:none}.sidebar.mobile-open{position:fixed;left:0;top:0;width:100%;height:100%;z-index:1000}.hero{grid-template-columns:1fr}.article-detail{padding:24px}.article-detail h1{font-size:1.8rem}}
     </style>
   </head>
   <body>
-    <div class="container">
-      <header>
-        <div class="brand"><span>Z.I.S.G.S</span> Newsroom</div>
-        <nav class="nav">
-          <span>World</span>
-          <span>Politics</span>
-          <span>Business</span>
-          <span>Health</span>
-          <span>Tech</span>
-        </nav>
-      </header>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="brand-short">Z</span><span class="brand-full">Z.I.S.G.S</span></div>
+        
+        <div class="nav-section">
+          <div class="nav-title">Main</div>
+          <a class="nav-item active" onclick="showPage('home')">📰 Home</a>
+          <a class="nav-item" onclick="showPage('headlines')">⚡ Headlines</a>
+          <a class="nav-item" onclick="showPage('trending')">🔥 Trending</a>
+          <a class="nav-item" onclick="showPage('saved')">📌 Saved</a>
+        </div>
 
-      <section class="hero">
-        <article id="featured" class="featured">
-          <div class="loading">Loading top story...</div>
-        </article>
-        <aside id="sidebar" class="side-panel"></aside>
-      </section>
+        <div class="nav-section">
+          <div class="nav-title">Categories</div>
+          <a class="nav-item" onclick="showPage('category', 'world')">🌍 World</a>
+          <a class="nav-item" onclick="showPage('category', 'politics')">🏛️ Politics</a>
+          <a class="nav-item" onclick="showPage('category', 'business')">💼 Business</a>
+          <a class="nav-item" onclick="showPage('category', 'tech')">🔧 Tech</a>
+          <a class="nav-item" onclick="showPage('category', 'health')">⚕️ Health</a>
+        </div>
 
-      <h2 class="section-title">Latest headlines</h2>
-      <section id="articles" class="grid"></section>
+        <div class="nav-section">
+          <div class="nav-title">Other</div>
+          <a class="nav-item" onclick="showPage('search')">🔍 Search</a>
+          <a class="nav-item" onclick="showPage('settings')">⚙️ Settings</a>
+        </div>
+      </aside>
+
+      <main class="main">
+        <!-- HOME PAGE -->
+        <div id="home" class="page active">
+          <div class="container">
+            <header>
+              <div class="header-brand"><span>Z.I.S.G.S</span> Newsroom</div>
+              <input type="text" class="search-box" placeholder="Search articles..." onkeypress="if(event.key==='Enter') showPage('search', this.value)">
+            </header>
+
+            <section class="hero">
+              <article id="featured" class="featured">
+                <div class="loading">Loading top story...</div>
+              </article>
+              <aside id="sidebar-home" class="side-panel"></aside>
+            </section>
+
+            <h2 class="section-title">Latest Headlines</h2>
+            <section id="home-articles" class="grid"></section>
+          </div>
+        </div>
+
+        <!-- HEADLINES PAGE -->
+        <div id="headlines" class="page">
+          <div class="container">
+            <header>
+              <div class="header-brand"><span>All</span> Headlines</div>
+              <input type="text" class="search-box" placeholder="Search articles...">
+            </header>
+
+            <div class="category-filter" id="headlines-filter"></div>
+            <section id="headlines-articles" class="grid"></section>
+            <div id="headlines-pagination" class="pagination"></div>
+          </div>
+        </div>
+
+        <!-- TRENDING PAGE -->
+        <div id="trending" class="page">
+          <div class="container">
+            <header>
+              <div class="header-brand"><span>🔥</span> Trending Now</div>
+            </header>
+            <section id="trending-articles" class="grid"></section>
+          </div>
+        </div>
+
+        <!-- CATEGORY PAGE -->
+        <div id="category" class="page">
+          <div class="container">
+            <header>
+              <div class="header-brand"><span id="category-title">Category</span> Articles</div>
+            </header>
+            <section id="category-articles" class="grid"></section>
+          </div>
+        </div>
+
+        <!-- ARTICLE DETAIL PAGE -->
+        <div id="article-detail" class="page">
+          <div class="container">
+            <a class="back-btn" onclick="history.back()">← Back</a>
+            <article id="detail-content" class="article-detail"></article>
+            <h2 class="section-title">Related Articles</h2>
+            <section id="related-articles" class="grid"></section>
+          </div>
+        </div>
+
+        <!-- SAVED PAGE -->
+        <div id="saved" class="page">
+          <div class="container">
+            <header>
+              <div class="header-brand"><span>📌</span> Saved Articles</div>
+            </header>
+            <section id="saved-articles" class="grid"></section>
+            <div id="saved-empty" class="empty" style="display:none">No saved articles yet</div>
+          </div>
+        </div>
+
+        <!-- SEARCH PAGE -->
+        <div id="search" class="page">
+          <div class="container">
+            <header>
+              <div class="header-brand"><span>🔍</span> Search Results</div>
+              <input type="text" class="search-box" id="search-input" placeholder="Search articles..." onkeypress="if(event.key==='Enter') performSearch()">
+            </header>
+            <section id="search-results" class="grid"></section>
+            <div id="search-empty" class="empty" style="display:none">No results found</div>
+          </div>
+        </div>
+
+        <!-- SETTINGS PAGE -->
+        <div id="settings" class="page">
+          <div class="container">
+            <header>
+              <div class="header-brand"><span>⚙️</span> Settings</div>
+            </header>
+            <div style="background:#1f2937;border-radius:16px;padding:30px;margin-top:30px">
+              <h2 style="margin-bottom:20px">App Settings</h2>
+              <label style="display:block;margin-bottom:15px">
+                <input type="checkbox" id="dark-mode" checked> Dark Mode
+              </label>
+              <label style="display:block;margin-bottom:15px">
+                <input type="checkbox" id="notifications" checked> Enable Notifications
+              </label>
+              <button onclick="alert('Settings saved!')" style="background:var(--accent);color:#0f172a;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600">Save Settings</button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
 
     <script>
-      const RSS_URL="https://api.rss2json.com/v1/api.json?rss_url=https://rss.cnn.com/rss/cnn_topstories.rss";
+      const RSS_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://rss.cnn.com/rss/cnn_topstories.rss";
+      let allArticles = [];
+      let currentPage = 1;
+      const itemsPerPage = 12;
 
-      async function fetchNews(){
+      async function fetchNews() {
         try {
           const res = await fetch(RSS_URL);
           const data = await res.json();
           if (!data.items || data.status !== "ok") throw new Error("Unable to load news feed");
-          renderNews(data.items.filter(item => item.link));
+          allArticles = data.items.filter(item => item.link);
+          renderHome();
         } catch (error) {
-          document.getElementById("articles").innerHTML = "<p class='loading'>Could not load the latest news right now.</p>";
           console.error(error);
+          document.getElementById("home-articles").innerHTML = "<p class='loading'>Could not load news</p>";
         }
       }
 
-      function renderNews(articles){
+      function showPage(page, param = null) {
+        document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+        document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+        
+        document.getElementById(page)?.classList.add("active");
+        event?.target?.classList.add("active");
+
+        if (page === "home") renderHome();
+        else if (page === "headlines") renderHeadlines();
+        else if (page === "trending") renderTrending();
+        else if (page === "category") renderCategory(param);
+        else if (page === "article-detail") renderArticleDetail(param);
+        else if (page === "saved") renderSaved();
+        else if (page === "search") renderSearch();
+      }
+
+      function renderHome() {
         const featured = document.getElementById("featured");
-        const sidebar = document.getElementById("sidebar");
-        const container = document.getElementById("articles");
-        const top = articles[0];
+        const sidebar = document.getElementById("sidebar-home");
+        const container = document.getElementById("home-articles");
+        const top = allArticles[0];
         if (!top) return;
 
         featured.innerHTML = `
           <img src="${top.thumbnail || 'https://placehold.co/1200x800/111827/ffffff?text=Z.I.S.G.S'}" alt="${top.title}">
           <div class="featured-content">
             <span class="badge">Top Story</span>
-            <h1>${top.title}</h1>
-            <p>${stripHtml(top.description || "Read the latest update from Z.I.S.G.S Newsroom.")}</p>
+            <h1 onclick="showArticle(event, ${allArticles.indexOf(top)})" style="cursor:pointer">${top.title}</h1>
+            <p>${stripHtml(top.description || "Read the latest update")}</p>
             <div class="meta-row">
               <span>${new Date(top.pubDate).toLocaleDateString()}</span>
               <a href="${top.link}" target="_blank" class="article-link">Read more →</a>
@@ -77,32 +229,194 @@
           </div>
         `;
 
-        sidebar.innerHTML = articles.slice(1,4).map(a => `
-          <div class="mini-card">
+        sidebar.innerHTML = allArticles.slice(1, 4).map((a, i) => `
+          <div class="mini-card" onclick="showArticle(event, ${i + 1})">
             <h3>${a.title}</h3>
             <div class="meta">${new Date(a.pubDate).toLocaleDateString()}</div>
           </div>
         `).join("");
 
-        container.innerHTML = articles.slice(1).map(a => `
-          <article class="article-card">
+        container.innerHTML = allArticles.slice(0, 6).map((a, i) => `
+          <article class="article-card" onclick="showArticle(event, ${i})">
             <img src="${a.thumbnail || 'https://placehold.co/800x500/1f2937/ffffff?text=Z.I.S.G.S'}" alt="${a.title}">
             <div class="article-body">
               <h3>${a.title}</h3>
-              <p>${stripHtml(a.description || "Read the latest coverage from Z.I.S.G.S Newsroom.")}</p>
+              <p>${stripHtml(a.description || "Read the latest")}</p>
               <div class="meta-row">
                 <span>${new Date(a.pubDate).toLocaleDateString()}</span>
-                <a class="article-link" href="${a.link}" target="_blank">Read →</a>
               </div>
             </div>
           </article>
         `).join("");
       }
 
-      function stripHtml(html){
+      function renderHeadlines() {
+        const container = document.getElementById("headlines-articles");
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedArticles = allArticles.slice(start, end);
+
+        container.innerHTML = paginatedArticles.map((a, i) => `
+          <article class="article-card" onclick="showArticle(event, ${start + i})">
+            <img src="${a.thumbnail || 'https://placehold.co/800x500/1f2937/ffffff?text=Z.I.S.G.S'}" alt="${a.title}">
+            <div class="article-body">
+              <h3>${a.title}</h3>
+              <p>${stripHtml(a.description || "Read more")}</p>
+              <div class="meta-row">
+                <span>${new Date(a.pubDate).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </article>
+        `).join("");
+
+        const totalPages = Math.ceil(allArticles.length / itemsPerPage);
+        const paginationHTML = [];
+        for (let i = 1; i <= totalPages; i++) {
+          paginationHTML.push(`<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="currentPage=${i}; renderHeadlines()">${i}</button>`);
+        }
+        document.getElementById("headlines-pagination").innerHTML = paginationHTML.join("");
+      }
+
+      function renderTrending() {
+        const container = document.getElementById("trending-articles");
+        container.innerHTML = allArticles.slice(0, 12).map((a, i) => `
+          <article class="article-card" onclick="showArticle(event, ${i})">
+            <img src="${a.thumbnail || 'https://placehold.co/800x500/1f2937/ffffff?text=Z.I.S.G.S'}" alt="${a.title}">
+            <div class="article-body">
+              <h3>${a.title}</h3>
+              <p>${stripHtml(a.description || "Read more")}</p>
+              <div class="meta-row">
+                <span>${new Date(a.pubDate).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function renderCategory(category) {
+        document.getElementById("category-title").textContent = category.charAt(0).toUpperCase() + category.slice(1);
+        const container = document.getElementById("category-articles");
+        const filtered = allArticles.slice(0, 12);
+        container.innerHTML = filtered.map((a, i) => `
+          <article class="article-card" onclick="showArticle(event, ${i})">
+            <img src="${a.thumbnail || 'https://placehold.co/800x500/1f2937/ffffff?text=Z.I.S.G.S'}" alt="${a.title}">
+            <div class="article-body">
+              <h3>${a.title}</h3>
+              <p>${stripHtml(a.description || "Read more")}</p>
+              <div class="meta-row">
+                <span>${new Date(a.pubDate).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function showArticle(e, index) {
+        e.preventDefault();
+        renderArticleDetail(index);
+        showPage("article-detail");
+      }
+
+      function renderArticleDetail(index) {
+        const article = allArticles[index];
+        if (!article) return;
+
+        const detailContent = document.getElementById("detail-content");
+        detailContent.innerHTML = `
+          <img src="${article.thumbnail || 'https://placehold.co/1200x600/1f2937/ffffff?text=Z.I.S.G.S'}" alt="${article.title}">
+          <h1>${article.title}</h1>
+          <div class="meta-info">
+            <span>${new Date(article.pubDate).toLocaleDateString()}</span>
+            <span>By Z.I.S.G.S News</span>
+            <button onclick="saveArticle(${index})" style="background:transparent;border:none;color:#86efac;cursor:pointer;font-weight:600">Save Article</button>
+          </div>
+          <div class="content">${article.description || "Full article content here"}</div>
+          <div style="margin-top:30px">
+            <a href="${article.link}" target="_blank" class="article-link">Read full article on source →</a>
+          </div>
+        `;
+
+        const related = document.getElementById("related-articles");
+        related.innerHTML = allArticles.slice(index + 1, index + 4).map((a, i) => `
+          <article class="article-card" onclick="showArticle(event, ${index + i + 1})">
+            <img src="${a.thumbnail || 'https://placehold.co/800x500/1f2937/ffffff?text=Z.I.S.G.S'}" alt="${a.title}">
+            <div class="article-body">
+              <h3>${a.title}</h3>
+              <p>${stripHtml(a.description || "Read more")}</p>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function renderSaved() {
+        const saved = JSON.parse(localStorage.getItem("savedArticles") || "[]");
+        const container = document.getElementById("saved-articles");
+        const empty = document.getElementById("saved-empty");
+
+        if (saved.length === 0) {
+          container.style.display = "none";
+          empty.style.display = "block";
+          return;
+        }
+
+        container.style.display = "grid";
+        empty.style.display = "none";
+        container.innerHTML = allArticles.filter((_, i) => saved.includes(i)).map((a, i) => `
+          <article class="article-card" onclick="showArticle(event, ${allArticles.indexOf(a)})">
+            <img src="${a.thumbnail || 'https://placehold.co/800x500/1f2937/ffffff?text=Z.I.S.G.S'}" alt="${a.title}">
+            <div class="article-body">
+              <h3>${a.title}</h3>
+              <p>${stripHtml(a.description || "Read more")}</p>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function renderSearch() {
+        const query = document.getElementById("search-input").value.toLowerCase();
+        const results = allArticles.filter(a => a.title.toLowerCase().includes(query) || a.description.toLowerCase().includes(query));
+        const container = document.getElementById("search-results");
+        const empty = document.getElementById("search-empty");
+
+        if (results.length === 0) {
+          container.style.display = "none";
+          empty.style.display = "block";
+          return;
+        }
+
+        container.style.display = "grid";
+        empty.style.display = "none";
+        container.innerHTML = results.map((a, i) => `
+          <article class="article-card" onclick="showArticle(event, ${allArticles.indexOf(a)})">
+            <img src="${a.thumbnail || 'https://placehold.co/800x500/1f2937/ffffff?text=Z.I.S.G.S'}" alt="${a.title}">
+            <div class="article-body">
+              <h3>${a.title}</h3>
+              <p>${stripHtml(a.description || "Read more")}</p>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function performSearch() {
+        showPage("search");
+        renderSearch();
+      }
+
+      function saveArticle(index) {
+        const saved = JSON.parse(localStorage.getItem("savedArticles") || "[]");
+        if (!saved.includes(index)) {
+          saved.push(index);
+          localStorage.setItem("savedArticles", JSON.stringify(saved));
+          alert("Article saved!");
+        } else {
+          alert("Already saved!");
+        }
+      }
+
+      function stripHtml(html) {
         const tmp = document.createElement("div");
         tmp.innerHTML = html;
-        return tmp.textContent.replace(/\s+/g," ").trim().slice(0,180) + "...";
+        return tmp.textContent.replace(/\s+/g, " ").trim().slice(0, 150) + "...";
       }
 
       fetchNews();
